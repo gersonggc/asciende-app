@@ -1,0 +1,33 @@
+.img-header-report {
+
+    width: 150px;
+    height: 125px;
+
+}
+
+
+.go-to-top-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #00A3AC;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    opacity: 0; /* Ocultar el botón inicialmente */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.go-to-top-btn:hover {
+    background-color: #09daf7;
+    color: #083e41;
+}
+
+.go-to-top-btn.show {
+    opacity: 1; /* Mostrar el botón al desplazarse hacia abajo */
+}
