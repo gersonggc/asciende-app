@@ -32,9 +32,14 @@ class Client extends Model
         
     ];
 
+    public function toString()
+    {
+        return $this->name_code;
+    }
+
     public function getNameCodeAttribute()
     {
-        return $this->names.' - '.$this->code;
+        return trim($this->names).'-'.$this->code;
     }
 
 

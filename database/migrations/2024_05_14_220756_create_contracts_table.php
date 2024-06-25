@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->unique();
             $table->unsignedBigInteger('guarantor_id')->nullable();
             $table->unsignedBigInteger('client_id');
-            $table->decimal('amount', 10, 2);
-            $table->enum('payment_frequency', ['fortnightly', 'monthly']);
-            $table->unsignedInteger('installments');
+            $table->decimal('initial_amount', 10, 2);
+            $table->decimal('total_amount', 10, 2);
             $table->decimal('percentage', 5, 2);
-            $table->enum('status', ['PENDING', 'APPROVED', 'REJECTED', 'ENDING'])->default('PENDING');
+            $table->decimal('profit', 10, 2);
+            $table->decimal('initial', 10, 2)->nullable()->default(0.00);
+            $table->enum('payment_frequency', ['WEEKLY', 'FORTNIGHTLY', 'MONTHLY'])->default('WEEKLY');
+            $table->unsignedTinyInteger('payment_day_of_week')->nullable();
+            $table->unsignedInteger('installments_number');
+            $table->enum('status', ['APPROVED', 'REJECTED', 'ENDING'])->default('APPROVED');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->text('terms')->nullable();

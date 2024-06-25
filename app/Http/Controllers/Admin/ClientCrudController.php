@@ -25,7 +25,7 @@ class ClientCrudController extends CrudController
         'names' => 'Nombres',
         'last_names' => 'Apellidos',
         'direction' => 'Dirección',
-        'phone' => 'Telefono',
+        'phone' => 'Teléfono',
         'email' => 'Correo',
         'active' => 'Activo',
         'created_at' => 'Fecha registro',
@@ -51,37 +51,12 @@ class ClientCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        //CRUD::setFromDb(); // set columns from db columns.
         CRUD::column('code')->label(self::LABELS['code']);
         CRUD::column('dni')->label(self::LABELS['dni']);
         CRUD::column('names')->label(self::LABELS['names']);
         CRUD::column('last_names')->label(self::LABELS['last_names']);
-        // CRUD::column('direction')->label(self::LABELS['direction']);
         CRUD::column('phone')->label(self::LABELS['phone']);
-        // CRUD::column('email')->label(self::LABELS['email']);
         CRUD::column('active')->label(self::LABELS['active']);
-        // CRUD::column('status')
-        // ->label(self::LABELS['status'])
-        // ->name('status')
-        // ->type('enum')
-        // ->options([
-        //     'PENDING'  => 'Pendiente por aprobar',
-        //     'APPROVED' => 'Aprobado',
-        //     'REJECTED' => 'Rechazado'
-        // ])->wrapper([
-        //     'element' => 'span',
-        //     'class' => function($crud, $column, $entry, $related_key){
-        //         if($column['value'] === 'PENDING') return 'badge badge-warning';
-        //         elseif($column['value'] === 'APPROVED') return 'badge badge-success';
-        //         elseif($column['value'] === 'REJECTED') return 'badge badge-danger';
-        //         else return 'badge badge-info';
-        //     }
-        // ]);
-
-        /**
-         * Columns can be defined using the fluent syntax:
-         * - CRUD::column('price')->type('number');
-         */
     }
 
     /**

@@ -17,6 +17,7 @@
     <div class="page-wrapper">
 
         <div class="page-body">
+            <p>pruebass</p>
             <main class="{{ backpack_theme_config('options.useFluidContainers') ? 'container-fluid' : 'container-xl' }}">
 
                 @yield('before_breadcrumbs_widgets')
@@ -36,20 +37,27 @@
     </div>
 </div>
 
+<!-- <script src="{{ asset('js/jquery.min.js') }}"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<script>
+  $(document).ready(function() {
+    console.log('pasa por aqui')
+    $('.select2').select2({
+      width: '100%'
+    });
+  });
+</script> -->
+
 @yield('before_scripts')
 @stack('before_scripts')
+
 
 @include(backpack_view('inc.scripts'))
 @include(backpack_view('inc.theme_scripts'))
 
 @yield('after_scripts')
 @stack('after_scripts')
-<script>
-  $(document).ready(function() {
-    $('.select2').select2({
-      width: '100%'
-    });
-  });
-</script>
+
 </body>
 </html>

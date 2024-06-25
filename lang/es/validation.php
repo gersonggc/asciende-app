@@ -3,6 +3,7 @@
 $LABELS = array_merge(
     \App\Http\Controllers\Admin\ClientCrudController::LABELS,
     \App\Http\Controllers\Admin\ContractCrudController::LABELS,
+    \App\Http\Controllers\Admin\InstallmentCrudController::LABELS
 );
 
 

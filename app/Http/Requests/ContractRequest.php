@@ -22,19 +22,20 @@ class ContractRequest extends FormRequest
      *
      * @return array
      */
+    
     public function rules()
     {
         return [
-        'client_id' =>'required',
-        'amount' =>'required',
-        'payment_frequency' =>'required',
-        'installments' =>'required',
-        'percentage' =>'required',
-        'start_date' =>'Fecha de required',
-        'end_date' =>'Fecha required',
-        
+            'client_id' => 'required|exists:clients,id',
+            'total_amount' => 'required|numeric',
+            'installments_number' => 'required|integer',
+            'start_date' => 'required|date',
+            'payment_frequency' => 'required|string|in:WEEKLY,FORTNIGHTLY,MONTHLY',
+            'percentage' => 'required|numeric',
+            'payment_day_of_week' => 'required_if:payment_frequency,WEEKLY|nullable|integer|min:0|max:6',
         ];
     }
+
 
     /**
      * Get the validation attributes that apply to the request.
@@ -53,10 +54,12 @@ class ContractRequest extends FormRequest
      *
      * @return array
      */
+    
     public function messages()
     {
         return [
-            //
+            'payment_day_of_week.required_if' => 'El campo Dia de Pago es requerido cuando la Frecuencia de Pago es Semanal.',
         ];
     }
+
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
+            $table->string('code')->unique();
             $table->string('names');
             $table->string('last_names');
             $table->string('dni');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('observations')->nullable();
             $table->boolean('active')->default(true);
-            // $table->enum('contract_status', ["PENDING", "ACTIVE", "IN_PROGRESS", "TERMINATED", "REJECTED"])->default('PENDING');
+            // $table->enum('status', ["ACTIVE", "IN_PROGRESS", "TERMINATED", "REJECTED"])->default('ACTIVE');
             $table->timestamps();
         });
     }
