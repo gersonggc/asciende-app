@@ -59,3 +59,12 @@
         <button tabindex="5" type="submit" class="btn btn-primary w-100">{{ trans('backpack::base.login') }}</button>
     </div>
 </form>
+
+
+<style>
+    .navbar_logo {
+        margin-top: 10px;
+        width: 60%;
+        opacity: 1;
+    }
+</style>

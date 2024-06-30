@@ -60,10 +60,14 @@ class ContractObserver
                 for ($i = 1; $i <= $numInstallments; $i++) {
                     $dueDate = $currentDate->copy();
                     if ($i === 1) {
-                        $dueDate = $dueDate->day <= 15 ? $dueDate->day(15) : $dueDate->endOfMonth();
+                        // $dueDate = $dueDate->day <= 15 ? $dueDate->day(15) : $dueDate->endOfMonth();
+                        $dueDate = $dueDate->day <= 15 ? $dueDate->day(1) : $dueDate->day(16);
                     } else {
+                        // $prevDate = Carbon::createFromFormat('Y-m-d', end($dueDates));
+                        // $dueDate = $prevDate->day === 15 ? $prevDate->endOfMonth() : $prevDate->addDay()->day(15);
                         $prevDate = Carbon::createFromFormat('Y-m-d', end($dueDates));
-                        $dueDate = $prevDate->day === 15 ? $prevDate->endOfMonth() : $prevDate->addDay()->day(15);
+                        // Si el pago anterior fue el día 16, entonces el próximo será el día 1 del siguiente mes, de lo contrario el día 16 del siguiente mes
+                        $dueDate = $prevDate->day === 16 ? $prevDate->addMonth()->startOfMonth() : $prevDate->addMonth()->day(16);
                     }
                     $dueDates[] = $dueDate->toDateString();
                 }

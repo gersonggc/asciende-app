@@ -40,8 +40,13 @@
                   @if ($crud->hasUploadFields('create')) enctype="multipart/form-data" @endif>
                 {!! csrf_field() !!}
                 @include('crud::form_content', ['fields' => $crud->getFields('create'), 'action' => 'create'])
-                <div>
-                    @include('crud::inc.form_save_buttons')
+                <div class="mt-2"> 
+                    <!-- @include('crud::inc.form_save_buttons') -->
+                    <button type="submit" class="btn btn-success" name="save_action" value="save_and_new">
+                        <span class="la la-save" role="presentation" aria-hidden="true"></span> &nbsp;
+                        <span>Guardar Pago</span>
+                    </button>
+
                 </div>
             </form>
         </div>

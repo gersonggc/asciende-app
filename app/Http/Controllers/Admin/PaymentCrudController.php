@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\PaymentRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use Carbon\Carbon;
 
 /**
  * Class PaymentCrudController
@@ -46,6 +47,7 @@ class PaymentCrudController extends CrudController
     protected function setupListOperation()
     {
         $installment_id = request()->input('installment_id');
+        $installment = \App\Models\Installment::find($installment_id);
 
         if ( $installment_id ) {
             $this->crud->addClause('where', 'installment_id', '=', $installment_id)->orderBy('created_at', 'asc');
@@ -53,15 +55,24 @@ class PaymentCrudController extends CrudController
         $this->crud->removeButton('create');
         $this->crud->removeButton('update');
         $this->crud->removeButton('delete');
-        // $this->crud->addButtonFromView('top', 'volver', 'back_installment_list', 'right');
-        // CRUD::setOperationSetting('lineButtonsAsDropdown', true);
+        $this->crud->removeButton('show');
 
-        CRUD::column('installment.installment_number')->label(self::LABELS['installment_id']);
+        CRUD::column('installment_number')->label(self::LABELS['installment_id']);
         
         CRUD::column('payment_date')->label(self::LABELS['payment_date']);
-        CRUD::column('amount')->label(self::LABELS['amount']);
+
+        CRUD::column('amount')->label(self::LABELS['amount'])->suffix('$')->priority(1);
+
+        $contractId = $installment->contract_id;
+        view()->share('contractId', $contractId);
+
+        $this->crud->setListView('admin.payments.list');
+        // View::composer('reports.card_requests._summary', function ($view) use ($totals) {
+        //     $view->with('totals', $totals);
+        // });
 
         // $this->crud->setListView('admin.payments.list'); // Usar la vista personalizad
+
         
     }
 
@@ -74,8 +85,10 @@ class PaymentCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(PaymentRequest::class);
-        $installment_id = $contract_id = $this->crud->getRequest()->installment_id;
+        $installment_id = request()->get('installment_id');
         $installment = \App\Models\Installment::find($installment_id);
+        $contractId = $installment->contract_id;
+        $this->crud->removeButton('cancel');
 
         $this->crud->addField([
             'name' => 'installment_id',
@@ -105,9 +118,20 @@ class PaymentCrudController extends CrudController
         ]);
 
         $this->crud->addField([
+            'name' => 'due_date',
+            'label' => 'Fecha de Vencimiento de la Cuota',
+            'type' => 'text',
+            'value' => Carbon::createFromFormat('Y-m-d', $installment->due_date)->format('d/m/Y'),
+            'attributes' => [
+                'class' => 'form-control',
+                'disabled' => true
+            ]
+        ]);
+
+        $this->crud->addField([
             'name' => 'amount',
             'label' => 'Monto a Pagadar',
-            'type' => 'number',
+            'type' => 'text',
             'attributes' => [
                 'class' => 'form-control'
             ]
@@ -144,9 +168,6 @@ class PaymentCrudController extends CrudController
             ]
         ]);
 
-        $installment_id = request()->get('installment_id');
-        $installment = \App\Models\Installment::find($installment_id);
-        $contractId = $installment->contract_id;
         view()->share('contractId', $contractId);
 
         $this->crud->setCreateView('admin.payments.create');

@@ -28,9 +28,12 @@ class ContractCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
     const LABELS = [
+        'code' => 'N° Contrato',
         'client_id' =>'Cliente',
+        'full_name' => 'Cliente',
         'guarantor_id' =>'Fiador',
         'total_amount' =>'Monto',
+        'sumary_payment' => 'Resumen Pago',
         'initial_amount' =>'Monto Inicial',
         'initial' =>'Pago Inicial',
         'payment_frequency' =>'Frecuencai del Pago',
@@ -68,10 +71,20 @@ class ContractCrudController extends CrudController
         CRUD::setOperationSetting('lineButtonsAsDropdown', true);
         $this->crud->removeButton('update');
         $this->crud->removeButton('delete');
+        CRUD::column('code')->label(self::LABELS['code']);
         CRUD::column('start_date')->label(self::LABELS['start_date']);
-        CRUD::column('client_id')->label(self::LABELS['client_id']);
-        CRUD::column('guarantor_id')->label(self::LABELS['guarantor_id']);
-        CRUD::column('total_amount')->label(self::LABELS['total_amount'])->suffix('$')->priority(1);
+        CRUD::column('full_name')->label(self::LABELS['full_name']);
+        // CRUD::column('guarantor_id')->label(self::LABELS['guarantor_id']);
+        CRUD::addColumn([
+            'name' => 'sumary_payment', // Nombre del atributo o método en el modelo
+            'label' => 'Resumen de Pagos',
+            'type' => 'closure',
+            'function' => function($entry) {
+                $sumaryPayment = $entry->sumary_payment; // Obtiene el resumen de pagos del modelo
+                return $sumaryPayment['total_received'].' / '. $sumaryPayment['total_payment'];
+            },
+            'escaped' => false, // Esto permite HTML en la salida
+        ]);
         
         CRUD::column('percentage')->label(self::LABELS['percentage'])->suffix('%')->priority(1);
         CRUD::column('installments_number')->label(self::LABELS['installments_number']);
@@ -91,6 +104,7 @@ class ContractCrudController extends CrudController
             'label' => self::LABELS['payment_day_of_week'],
             'type' => 'closure',
             'function' => function($entry) {
+                if ( $entry->payment_day_of_week === null ) return 'No Aplica';
                 return ucfirst(Carbon::create()->dayOfWeek($entry->payment_day_of_week)->locale('es')->dayName);
             }
         ]);
@@ -135,6 +149,12 @@ class ContractCrudController extends CrudController
     {
         Widget::add()->type('script')->content('/packages/decimal/decimal-light.js');
         Widget::add()->type('script')->content('/js/admin/forms/contract.js');
+
+        $terms = '<p style="line-height: 1;"><b>Cláusulas:</b></p><br>    
+            <p style="line-height: 1.5;">1. El presente contrato establece las condiciones generales que regirán el financiamiento otorgado por el Acreedor al Financiado.</p><br>
+            <p style="line-height: 1.5;">2. El Financiado se compromete a cancelar las cuotas del financiamiento en las fechas y montos establecidos en el presente contrato, para así acumular un buen historial en (ASCIENDE).</p><br>
+            <p style="line-height: 1.5;">3. El Acreedor se compromete a la entrega del financiamiento del presente contrato.</p><br>
+            <p style="line-height: 1.5;">4. En caso de no realizar el pago de las cuotas, el Financiado deberá contar con un Fiador que cumpla con el contrato establecido.</p>';
 
         CRUD::setValidation(ContractRequest::class);
 
@@ -199,13 +219,6 @@ class ContractCrudController extends CrudController
             'label' => 'Ganancia Estimda',
             'value' =>'',
         ]);
-
-        // CRUD::addField([
-        //     'name' => 'converted_amount',
-        //     'type' => 'custom_html',
-        //     'label' => 'Monto Inicial',
-        //     'value' =>'',
-        // ]);
 
         $this->crud->addField([
             'name' => 'percentage',
@@ -281,14 +294,20 @@ class ContractCrudController extends CrudController
                     ['fontsize', ['fontsize']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],
-                    ['height', ['height']]
-                ]
+                    ['height', ['height']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
+                ],
+                
             ],
             'attributes' => [
                 'class' => 'form-control',
                 'placeholder' => 'Terminos del Contrato'
-            ]
+            ],
+            'value' => $terms,
         ]);
+
+       
     }
 
     /**

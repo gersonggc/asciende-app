@@ -22,15 +22,38 @@ class Payment extends Model
         'payment_date'
     ];
 
+    protected $appends = [
+        'installment_number',
+        'profit',
+        'client',
+    ];
+
     public function installment()
     {
         return $this->belongsTo(Installment::class);
     }
 
+    public function getClientAttribute()
+    {
+        return $this->installment->contract->client->full_name;
+    }
+
+    public function getInstallmentNumberAttribute()
+    {
+        return $this->installment->installment_number;
+    }
+
+    public function getProfitAttribute()
+    {
+        $percentaje = $this->installment->contract->percentage;
+        $initialAmount = round($this->amount / (1 + $percentaje / 100), 2);
+
+        return round($this->amount - $initialAmount, 2);
+        
+    }
+
     public function getInstallmentsButton()
     {
-        // dd($this->getKey());
-        
         return '<a href="' . url('admin/installments?contract_id=' . $this->installment?->contract_id) . '" class="btn btn-sm btn-link"> <span><i class="la la-eye"></i>Volver a Cuotas</span></a>';
     }
 

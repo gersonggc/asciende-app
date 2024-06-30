@@ -29,12 +29,18 @@ class Client extends Model
 
     protected $appends = [
         'name_code',
+        'full_name'
         
     ];
 
     public function toString()
     {
         return $this->name_code;
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->names.' '.$this->last_names;
     }
 
     public function getNameCodeAttribute()

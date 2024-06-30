@@ -25,7 +25,7 @@ class ClientRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' =>'required',
+            'code' => 'required|unique:clients',
             'names' => 'required',
             'last_names' => 'required',
             'dni' =>'required',

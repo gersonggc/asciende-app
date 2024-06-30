@@ -83,8 +83,6 @@ class InstallmentCrudController extends CrudController
 
         CRUD::column('total_payment_list')->label('Total Pagado');
 
-        
-        
         CRUD::column('status')
         ->label(self::LABELS['status'])
         ->name('status')

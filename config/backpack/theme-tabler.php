@@ -30,6 +30,8 @@ return [
 
     'developer_name' => 'Gerson Gonzalez',
 
+    'project_name' => 'Asciende App',
+
 
     /**
      * Pick a login page layout.

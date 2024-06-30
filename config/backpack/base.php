@@ -14,7 +14,7 @@ return [
     | By default the registration is open only on localhost.
     */
 
-    'registration_open' => env('BACKPACK_REGISTRATION_OPEN', env('APP_ENV') === 'local'),
+    'registration_open' => env('BACKPACK_REGISTRATION_OPEN', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,7 +46,7 @@ return [
 
     // Set this to false if you would like to skip adding the dashboard routes
     // (you then need to overwrite the login route on your AuthController)
-    'setup_dashboard_routes' => true,
+    'setup_dashboard_routes' => false,
 
     // Set this to false if you would like to skip adding "my account" routes
     // (you then need to manually define the routes in your web.php)
@@ -172,7 +172,7 @@ return [
     // Should we use DB transactions when executing multiple queries? For example when creating an entry and it's relationships.
     // By wrapping in a database transaction you ensure that either all queries went ok, or if some failed the whole process
     // is rolled back and considered failed. This is a good setting for data integrity.
-    'useDatabaseTransactions' => false,
+    'useDatabaseTransactions' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -191,4 +191,7 @@ return [
     */
 
     'token_username' => env('BACKPACK_TOKEN_USERNAME', false),
+
+    'project_name' => 'Asciende App',
+
 ];

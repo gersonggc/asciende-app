@@ -38,13 +38,21 @@ class Installment extends Model
 
     protected $appends = [
         'pending_amount',
+        'projected_profit',
         'total_payment',
-        'total_payment_list'
+        'total_payment_list',
+        'client',
+        
     ];
 
     public function contract()
     {
         return $this->belongsTo(Contract::class);
+    }
+
+    public function getClientAttribute()
+    {
+        return $this->contract->client->full_name;
     }
 
     public function payments()
@@ -69,12 +77,37 @@ class Installment extends Model
         return $this->total_payment.' / '.$this->amount;
     }
 
+    public function getProjectedProfitAttribute()
+    {
+        $percentaje = $this->contract->percentage;
+        $initialAmount = round($this->amount / (1 + $percentaje / 100), 2);
+
+        return round($this->amount - $initialAmount, 2);
+        
+    }
+
     public function getPaymentsButton()
     {
-        
-        
+        if ($this->status === 'PENDING')
+        {
+            return '';    
+        }   
+
         return '<a href="' . url('admin/payment?installment_id=' . $this->getKey()) . '" class="btn btn-sm btn-link"> <span><i class="la la-eye"></i>Listado de Pagos</span></a>';
         
     }
+
+    public function getPaymenInstallmentButton()
+    {
+        if (in_array($this->status, ['PENDING','PARTIAL_PAID']))
+        {
+            return '<a class="btn btn-sm btn-link" href="'.url('/admin/payment/create?installment_id='.$this->getKey()).'">
+                <span class="badge rounded-pill text-bg-success"><i class="la la-check-circle me-2"></i> Pagar Cuota</span>
+            </a>';
+        }
+    }
+
+
+
 
 }

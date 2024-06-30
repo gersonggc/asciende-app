@@ -37,10 +37,10 @@ class Contract extends Model
         'start_date' => 'date'
     ];
 
-    // public function toString()
-    // {
-    //     return $this->client?->name_code ?? '';
-    // }
+    protected $appends = [
+        'sumary_payment',
+        'full_name',
+    ];
 
     public function client()
     {
@@ -55,6 +55,26 @@ class Contract extends Model
     public function installments()
     {
         return $this->hasMany(Installment::class);
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->client->full_name;
+    }
+
+    public function getSumaryPaymentAttribute()
+    {
+        $pendingAmount = $this->installments->sum('pending_amount');
+        $totalReceived = $this->installments->sum('total_payment');
+
+        // return  $this->total_amount.' / '.$totalReceived . ' / '.$pendingAmount;
+
+
+        return [
+            'total_payment' => number_format($this->total_amount, 2),
+            'total_received' => number_format($totalReceived, 2),
+            'pending_amount' => number_format($pendingAmount, 2)
+        ];
     }
 
     protected static function boot()
